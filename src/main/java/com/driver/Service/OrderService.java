@@ -62,4 +62,8 @@ public class OrderService {
     public String getLastDeliveryTimeByPartnerId(String partnerId) {
         return orderRepository.getLastDeliveryTimeByPartnerId(partnerId);
     }
+
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
+        return orderRepository.getOrdersLeftAfterGivenTimeByPartnerId(time, partnerId);
+    }
 }

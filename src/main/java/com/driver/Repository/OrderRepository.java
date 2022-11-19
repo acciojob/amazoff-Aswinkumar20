@@ -225,4 +225,31 @@ public class OrderRepository {
 
 
     }
+
+    public Integer getOrdersLeftAfterGivenTimeByPartnerId(String time, String partnerId) {
+
+        // traverse the map
+        int count = 0;
+        int hours = Integer.parseInt(time.substring(0,2));
+        int minutes = Integer.parseInt(time.substring(3,time.length()));
+        int givenTime = (hours*60)+minutes;
+
+
+        for(Map.Entry<String, LinkedHashSet<Order>> data : listOfOrderPartnerPair.entrySet()){
+            if(Objects.equals(partnerId, data.getKey())){
+                // now traverse the set after the given time:
+                for(Order order1: data.getValue()){
+                    if(order1.getDeliveryTime() >= givenTime){
+                        count++;
+                        count = data.getValue().size() - count;
+                        break;
+                    }else{
+                        count++;
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
 }
