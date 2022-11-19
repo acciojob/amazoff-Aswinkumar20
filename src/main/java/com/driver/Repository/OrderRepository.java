@@ -24,7 +24,7 @@ public class OrderRepository {
 
 
     // order and partner Pair
-    Map<String, Set<Order>> listOfOrderPartnerPair = new HashMap<>();
+    Map<String, LinkedHashSet<Order>> listOfOrderPartnerPair = new HashMap<>();
 
     public void addOrder(Order order){
         listOfOrders.add(order);
@@ -52,7 +52,7 @@ public class OrderRepository {
         // this line validate the number of orders added to the each partner
         // validate the duplicate objects:
 
-        Set<Order> orderr  =  listOfOrderPartnerPair.getOrDefault(partnerId, new HashSet<>());
+        LinkedHashSet<Order> orderr  =  listOfOrderPartnerPair.getOrDefault(partnerId, new LinkedHashSet<>());
 
         // traverse the listOfOrders
 
@@ -63,7 +63,7 @@ public class OrderRepository {
         }
 
         // here we need hashMap to store the pair with partner id:
-        listOfOrderPartnerPair.put(partnerId,   orderr);
+        listOfOrderPartnerPair.put(partnerId, orderr);
                                    // key     // value
     }
 
@@ -113,8 +113,10 @@ public class OrderRepository {
 
         // we need to return the list of order in string format:
         List<String> ordersOfPartnerId = new ArrayList<>();
+
         Set<Order> uniqueOrderOfPartner= new HashSet<>();
-        for(Map.Entry<String, Set<Order>> data : listOfOrderPartnerPair.entrySet()){
+
+        for(Map.Entry<String, LinkedHashSet<Order>> data : listOfOrderPartnerPair.entrySet()){
             if(Objects.equals(data.getKey(), partnerId)){
                 uniqueOrderOfPartner = data.getValue();
                 break;
@@ -190,7 +192,7 @@ public class OrderRepository {
         // now remove it from the assigned order of that partnerId
         // traverse the map and check each value for the given orderId:
 
-        for(Map.Entry<String, Set<Order>> data: listOfOrderPartnerPair.entrySet()){
+        for(Map.Entry<String, LinkedHashSet<Order>> data: listOfOrderPartnerPair.entrySet()){
             // now get the value and check it in set if present then remove it:
 //            Set<Order> newSet = data.getValue();
 
@@ -198,6 +200,28 @@ public class OrderRepository {
 
             data.getValue().removeIf(order2 -> Objects.equals(order2.getId(), orderId));
         }
+
+
+    }
+
+    public String getLastDeliveryTimeByPartnerId(String partnerId) {
+
+        // return the last added time in the partner id assigned in map:
+
+        // traverse the map
+        int time = 0;
+        for(Map.Entry<String, LinkedHashSet<Order>> data:  listOfOrderPartnerPair.entrySet()){
+            if(Objects.equals(data.getKey(), partnerId)){
+                for(Order order1 : data.getValue()){
+                    time = order1.getDeliveryTime();
+                }
+                break;
+            }
+        }
+
+        // return in hour format:
+
+        return String.valueOf(time/60)+":"+ String.valueOf(time%60);
 
 
     }

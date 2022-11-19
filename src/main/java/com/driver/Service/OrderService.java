@@ -58,4 +58,8 @@ public class OrderService {
     public void deleteByOrderId(String orderId) {
         orderRepository.deleteByOrderId(orderId);
     }
+
+    public String getLastDeliveryTimeByPartnerId(String partnerId) {
+        return orderRepository.getLastDeliveryTimeByPartnerId(partnerId);
+    }
 }
